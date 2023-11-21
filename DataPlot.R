@@ -1,5 +1,4 @@
-
-#Load Packages
+# Load Packages
 library(dplyr)
 library(ggplot2)
 # Load Data
@@ -20,8 +19,9 @@ for (df_name in data_list) {
     assign(df_name, df)
   }
 }
-# Clean code
+# Clean
 rm(file, data, df_name, df)
+# Get plots' row mean and std
 sample_frame_list <- list()
 for (df_name in data_list) {
   if (exists(df_name) && "count.in.Row" %in% colnames(get(df_name))) {
@@ -40,7 +40,7 @@ for (df_name in data_list) {
 }
 plots_message <- do.call(rbind, sample_frame_list)
 rm(df_name,plot_row_mean,plot_std,sample_df,sample_frame_list)
-
+# Get total of 50 plot count and real mean
 Real_total <- 0
 for (df_name in data_list) {
   df <- get(df_name)
@@ -49,6 +49,7 @@ for (df_name in data_list) {
 rm(df_name,df)
 Real_row_mean <- Real_total/(50*6)
 #====================================================================================
+# Graph for "Row Means for each of 50 Plots (Row)" vs 'real mean'
 ggplot(data = plots_message, aes(x = SampleFrom, y = row_mean)) +
   geom_point() +
   labs(x = "Plots", y = "Plot_Row_Mean", title = "Row Means for each of 50 Plots (Row)") +
@@ -56,15 +57,14 @@ ggplot(data = plots_message, aes(x = SampleFrom, y = row_mean)) +
   geom_segment(aes(x = SampleFrom, y = row_mean, xend = SampleFrom, yend = Real_row_mean), linetype = "dashed", color = "blue") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 #====================================================================================
+# Graph for "Standard Deviation for each of 50 Plots (Row)"
 ggplot(data = plots_message, aes(x = SampleFrom, y = plot_std)) +
   geom_point() +
   labs(x = "Plots", y = "Plot_std", title = "Standard Deviation for each of 50 Plots (Row)") +
   geom_segment(aes(x = SampleFrom, y = plot_std, xend = SampleFrom, yend = 0), linetype = "solid", color = "Gold") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
-        
-
-
 #====================================================================================
+# Get total of 50 plot count and real mean
 set.seed(2023)
 results_df2 <- data.frame(Iteration = numeric(0), Sum_Average = numeric(0))
 for (i in 1:100) {
